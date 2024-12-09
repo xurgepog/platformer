@@ -6,21 +6,34 @@ package platformer;
 import processing.core.PApplet;
 
 public class App extends PApplet {
+
+    private final int WIDTH = 800;
+    private final int HEIGHT = 600;
+    private final int FPS = 60;
     
 
     @Override
     public void settings() {
-        size(800, 600); // Set the size of the window
+        size(WIDTH, HEIGHT); // Set the size of the window
     }
 
+    // Initialize variables or game state
     @Override
     public void setup() {
-        // Initialize variables or game state
+        frameRate(FPS);
     }
 
     @Override
     public void draw() {
-        background(0); // Black background
+        background(16, 194, 109); // Black background
+    }
+
+    // Close window when key is pressed
+    @Override
+    public void keyPressed() {
+        if (key == 'q' || key == 'Q') {  // Press 'Q' to quit
+            exit();  // Close the window
+        }
     }
 
     public static void main(String[] args) {
