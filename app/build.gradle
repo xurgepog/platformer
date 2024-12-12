@@ -7,37 +7,37 @@
  */
 
 plugins {
-    id 'java'                // Add support for Java compilation and packaging
-    id 'application'         // Add support for building a command-line application (CLI)
-    id 'jacoco'               // Add support for code coverage analysis
+    id 'java'          // add support for Java compilation and packaging
+    id 'application'   // add support for building a command-line application (CLI)
+    id 'jacoco'        // add support for code coverage analysis
 }
 
 version = '1.0'
 
 repositories {
-    mavenCentral()  // Specify Maven Central as the repository to fetch dependencies from
+    mavenCentral()  // specify Maven Central as the repository to fetch dependencies from
 }
 
 dependencies {
-    implementation 'com.google.guava:guava:28.0-jre'    // Add Guava library as a runtime dependency
-    implementation 'org.processing:core:3.3.7'            // Add Processing core library for graphical applications
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'   // JUnit Jupiter API for unit testing
+    implementation 'com.google.guava:guava:28.0-jre'                  // add Guava library as a runtime dependency
+    implementation 'org.processing:core:3.3.7'                        // add Processing core library for graphical applications
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'    // JUnit Jupiter API for unit testing
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'    // JUnit Jupiter engine to run the tests
 }
 
 application {
-    getMainClass().set('platformer.App') // Define the main class for the application
+    getMainClass().set('platformer.App') // define the main class for the application
 }
 
 test {
-    useJUnitPlatform()    // Specify JUnit Platform for running tests
-    ignoreFailures = true // Allow tests to fail without stopping the build process
+    useJUnitPlatform()      // specify JUnit Platform for running tests
+    ignoreFailures = true   // allow tests to fail without stopping the build process
 }
 
 jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE  // Avoid duplicating files in the JAR
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE    // avoid duplicating files in the JAR
     manifest {
-        attributes 'Main-Class': 'platformer.App'      // Specify the entry point for the JAR file
+        attributes 'Main-Class': 'platformer.App'      // specify the entry point for the JAR file
     }
     from {
         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
