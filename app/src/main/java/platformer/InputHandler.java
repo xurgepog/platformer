@@ -1,6 +1,7 @@
 package platformer;
 
 public class InputHandler {
+    
     private final boolean[] keys = new boolean[128];
 
     public void keyPressed(char key) {

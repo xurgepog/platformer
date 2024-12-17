@@ -2,7 +2,8 @@ package platformer;
 
 import processing.core.PApplet;
 
-// import java.awt.*; // used for getting user screen dimensions
+// import java.awt.Dimension;  // used for getting user screen dimensions
+// import java.awt.Toolkit;
 
 public class App extends PApplet {
 
@@ -11,38 +12,56 @@ public class App extends PApplet {
     private InputHandler inputHandler;
 
     private int frameRate;
-    private int[] backgroundRGB;
+    private int[] backRGB;
+    private int[] objectRGB;
 
-    private final int SCREEN_WIDTH = 640;
-    private final int SCREEN_HEIGHT = 360;
+    // screen stuff
+    private final int BASE_WIDTH = 640;
+    private final int BASE_HEIGHT = 360;
+    private int scaleFactor;
+    // private int gameWidth, gameHeight; // size of game without borders
+    // private int horiBorder, vertBorder;
 
     @Override
     public void settings() {
         /*
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        
         int screenWidth = (int) screenSize.getWidth();
         int screenHeight = (int) screenSize.getHeight();
+        //System.out.println(screenWidth);
+        //System.out.println(screenHeight);
 
-        fullScreen();
-        System.out.println(screenWidth);
-        System.out.println(screenHeight);
-        */
+        // if not 16:9 screen, pick smaller scale factor
+        if (screenWidth / BASE_WIDTH <= screenHeight / BASE_HEIGHT)
+            scaleFactor = screenWidth / BASE_WIDTH;
+        else 
+            scaleFactor = screenHeight / BASE_HEIGHT;
 
-        size(SCREEN_WIDTH, SCREEN_HEIGHT, JAVA2D); // set the size of the window
+        gameWidth = BASE_WIDTH * scaleFactor;
+        gameHeight = BASE_HEIGHT * scaleFactor;
+
+        horiBorder = (screenWidth - gameWidth) / 2;
+        vertBorder = (screenHeight - gameHeight) / 2;   
+        */     
+        scaleFactor = 2;
+        size(BASE_WIDTH * scaleFactor, BASE_HEIGHT * scaleFactor, JAVA2D); // set the size of the window
     }
 
     // initialize variables or game state
     @Override
     public void setup() {
-        player = new Player(400, 300, 2);
-        physicsHandler = new PhysicsHandler();
+        player = new Player(400, 300, 100);
+        float gravity = 3f;
+        physicsHandler = new PhysicsHandler(gravity);
         physicsHandler.addObject(player);
         inputHandler = new InputHandler();
 
         frameRate = 60; // default frameRate;
         frameRate(frameRate);
-        backgroundRGB = new int[]{190, 227, 219}; // 'BEE3DB'
+        backRGB = new int[]{190, 227, 219}; // '89B0AE'
+        objectRGB = new int[]{137, 176, 174}; // 'BEE3DB'
+
+        // surface.setSize(1200, 600);
     }
 
     @Override
@@ -57,7 +76,9 @@ public class App extends PApplet {
 
     @Override
     public void draw() {
-        background(backgroundRGB[0], backgroundRGB[1], backgroundRGB[2]);
+        background(backRGB[0], backRGB[1], backRGB[2]);
+        fill(objectRGB[0], objectRGB[1], objectRGB[2]);
+        rect(0, BASE_HEIGHT*scaleFactor - 100, BASE_WIDTH*scaleFactor - 100, 20);
 
         float deltaTime = 1.0f / frameRate;
         physicsHandler.update(deltaTime);
@@ -69,6 +90,9 @@ public class App extends PApplet {
         }
         if (inputHandler.isKeyPressed('d')) {
             player.moveRight();
+        }
+        if (inputHandler.isKeyPressed('q')) {
+            exit();
         }
     }
 
