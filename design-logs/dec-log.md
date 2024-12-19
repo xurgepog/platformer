@@ -98,3 +98,69 @@
 
 - **Mechanics Development**: 
     - Began planning the basic movement mechanics. That is left and right movement, jumping, gravity.
+
+# [16-12-2024] Day 6: Creating Framework
+
+- **Framework Creation**:
+    - Will begin to create the main framework whilst implementing the left and right movement.
+    - Developed a *Player* class to handle the player's attributes and behavior.
+    - Perhaps simplify both the *App* and *Player* classes through the implementation of *InputHandler* and *PhysicsHandler* classes.
+        - The *InputHandler* will handle and allow for multiple key presses simlutaneously to be recognised.
+        - The *PhysicsHandler* will use any object with physics' position and velocity to update it accordingly.
+    - To ensure *PhysicsHandler* can update objects correctly, will develop a *GameObject* class that will define the necessary attributes.
+    - Considering the addition of a *Renderer* class later, which will manage sprite loading and drawing all objects that need to be displayed on the screen.
+
+- **Scaling**:
+    - Thinking about making my game have pixel graphics.
+    - Started looking into what this means for scaling.
+    - Aparrently 640 x 360 is best for upsizing to suit common screen resolutions.
+    - This is due to integer scaling rather than dynamic.
+    - If a screen is not a multiple, add a border maybe so maintain a clear visual.
+
+# [17-12-2024] Day 7: Refining Framework
+
+- When fullscreen the game runs really choppy.
+- Since it is just a side project, the main goal should just be to create a functioning game.
+- Will code at double scale (i.e. 1280 x 720) and draw pixel art at 640 x 360.
+- This means I can later add the ability to change screen size with scaling, but for now will just leave scaleFactor equal to 2.
+- Update *PhysicsHandler* to update the physics in a centralised manner.
+- Change *GameObject* class to *PhysicsObject*.
+- Noticing a rectange the same width of the screen will be over 50px longer, same with height. Hopefully this is a just *rect()* issue.
+- Added gravity through *PhysicsHandler*.
+- Made *PhysicsObject* an interface that forces setters and getters for position and velocity.
+- Now want to figure out a way to stop player movement when touching a wall or floor.
+- For previous code, figured it out based on what letter is currently being touched in the level designt text file.
+- This was done in conjunction with a *config.json* file that defined which text file matched which level, along with other details for that level.
+- Will expand on this idea with:
+    - *config.json*: points to other config files, and contains other misc.
+    - *settings.json*: holds user settings.
+    - *save.json*: contains user save data.
+    - *levels.json*: level details.
+- Will use *Processing*'s in built JSON reader to get the information in code.
+- May end up needing more than one json file for the levels. For now one will do however.
+- To store these files will set up a *resources/* directory in *src/*. This will hold *config/*, *levels/*, and *assets/* directories.
+- Will create a *configManager* class to handle both the levels and main config.
+
+# [18-12-2024] Day 8: Config and Renderer Planning
+
+- Began working on the *configManager*.
+- Set up basic *config.json* file that points to the other config files.
+- Began working on a *loadLevel()* function that reads from *levels.json* to find text files that contain the level format.
+- To complete above will want to render each of the objects read in the text file. Created a *Renderer* class to do so.
+- Added function to load images to hashmap to be later reference by name without having to load the png again.
+- Need to consider about unloading images to save memory, as well as preloading common assests.
+
+# [19-12-2024] Day 9: Config and Renderer Basics Creation
+
+- Want to add a *loadImage()* function to *Renderer* that performs action of drawing the image to the screen.
+- Complete *loadLevel()* basic functionality. It is now able to read the text file specified in *levels.json*, printing it to stdout.
+- The next goal is to interpret each of the symbols. I am not sure if this is a *Renderer* job, or a *configManager* job.
+- For now will leave will code it as a *configManager*.
+- Adding a *references* object to *levels.json* that will assist in translating the letters in the text files to their appropriate png names.
+- Will use a different letter for each type of png, and a different number to differentiate between the types.
+- For now will have references all just look in one file, but later can make the level be able to change the directory.
+- This will allow one levels ground.png look different to anothers.
+- Issue is however, that if ground.png already exists, it will not update it. Will have to tackle this problem after I have confirmed the basics work.
+- Now realised that I will have to store the pngs to load somewhere so it does not have to translate the entire text file each frame.
+- Will store this in *Renderer* using a 2D array called *levelLayout*.
+- Will only store stationary objects in this. Later will have to decide how to keep track of objects that move over time.

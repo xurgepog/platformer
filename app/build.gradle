@@ -26,7 +26,7 @@ dependencies {
 }
 
 application {
-    getMainClass().set('platformer.App') // define the main class for the application
+    getMainClass().set('platformer.Game') // define the main class for the application
 }
 
 test {
@@ -37,7 +37,7 @@ test {
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE    // avoid duplicating files in the JAR
     manifest {
-        attributes 'Main-Class': 'platformer.App'      // specify the entry point for the JAR file
+        attributes 'Main-Class': 'platformer.Game'      // specify the entry point for the JAR file
     }
     from {
         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }

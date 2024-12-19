@@ -1,15 +1,18 @@
 package platformer;
 
 import processing.core.PApplet;
+import processing.data.JSONObject;
 
 // import java.awt.Dimension;  // used for getting user screen dimensions
 // import java.awt.Toolkit;
 
-public class App extends PApplet {
+public class Game extends PApplet {
 
     private Player player;
     private PhysicsHandler physicsHandler;
     private InputHandler inputHandler;
+    private Renderer renderer;
+    private ConfigManager configManager;
 
     private int frameRate;
     private int[] backRGB;
@@ -51,16 +54,22 @@ public class App extends PApplet {
     @Override
     public void setup() {
         player = new Player(400, 300, 100);
+        
         float gravity = 3f;
         physicsHandler = new PhysicsHandler(gravity);
         physicsHandler.addObject(player);
+        
         inputHandler = new InputHandler();
 
         frameRate = 60; // default frameRate;
         frameRate(frameRate);
+        
         backRGB = new int[]{190, 227, 219}; // '89B0AE'
         objectRGB = new int[]{137, 176, 174}; // 'BEE3DB'
 
+        renderer = new Renderer();
+        configManager = new ConfigManager(this, "src/main/resources/config/config.json");
+        configManager.loadLevel(renderer, 0);
         // surface.setSize(1200, 600);
     }
 
@@ -85,6 +94,8 @@ public class App extends PApplet {
 
         player.draw(this); // add a renderer later?
 
+        renderer.drawLevel(this);
+
         if (inputHandler.isKeyPressed('a')) { // handle within inputHandler? - handle in level class later? - when created, for now this is fine
             player.moveLeft();
         }
@@ -97,6 +108,6 @@ public class App extends PApplet {
     }
 
     public static void main(String[] args) {
-        PApplet.main("platformer.App");
+        PApplet.main("platformer.Game");
     }
 }

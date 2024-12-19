@@ -1,0 +1,15 @@
+{
+    "paths": {
+        "directories": {
+            "settings": "src/main/resources/config/",
+            "save": "src/main/resources/config/",
+            "levels": "src/main/resources/config/",
+            "images": "/assets/images/"
+        },
+        "files": {
+            "settings": "settings.json",
+            "save": "save.json",
+            "levels": "levels.json"
+        }
+    }
+}

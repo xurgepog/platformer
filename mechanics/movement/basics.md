@@ -7,5 +7,11 @@
 - Jumping will allow the player to ascend for a fixed height, then fall back down.
 
 ## Break Down
+### Left and Right walking
+- Trigger: 'A' and 'D' keys.
+- Behaviour: For now, move left or right at a fixed velocity.
 
 ## Psuedocode
+### Left and Right walking
+- On 'A' press set player velocity to -speed
+- On 'D' press set player velocity to speed

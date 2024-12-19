@@ -1,0 +1,13 @@
+{
+    "levelsLocation": "src/main/resources/levels/",
+    "levels": [
+        {
+            "layout": "level1.txt",
+            "levelWidth": 28,
+            "levelHeight": 8
+        }
+    ],
+    "references": {
+        "X": "ground"
+    }
+}
