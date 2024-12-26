@@ -9,6 +9,7 @@ import processing.data.JSONObject;
 
 public class ConfigManager {
     
+
     private JSONObject configData;
 
     private JSONObject settingsData;
@@ -68,9 +69,7 @@ public class ConfigManager {
                     }
                     String pngName = getPngName(references, key); 
                     renderer.updatelevelLayout(i, lineCount, imagesLoc + pngName); // when adding more folders to images/ will have to update
-                    System.out.print(key);
                 }
-                System.out.println();
                 lineCount++;
             }
         } catch (IOException e) {
@@ -80,5 +79,9 @@ public class ConfigManager {
 
     private String getPngName(JSONObject refs, String key) {
         return refs.getString(key);
+    }
+
+    public String getImagesLoc() {
+        return imagesLoc;
     }
 }

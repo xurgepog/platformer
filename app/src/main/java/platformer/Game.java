@@ -1,10 +1,9 @@
 package platformer;
 
 import processing.core.PApplet;
-import processing.data.JSONObject;
 
-// import java.awt.Dimension;  // used for getting user screen dimensions
-// import java.awt.Toolkit;
+import java.awt.Dimension;  // used for getting user screen dimensions
+import java.awt.Toolkit;
 
 public class Game extends PApplet {
 
@@ -16,7 +15,6 @@ public class Game extends PApplet {
 
     private int frameRate;
     private int[] backRGB;
-    private int[] objectRGB;
 
     // screen stuff
     private final int BASE_WIDTH = 640;
@@ -46,14 +44,15 @@ public class Game extends PApplet {
         horiBorder = (screenWidth - gameWidth) / 2;
         vertBorder = (screenHeight - gameHeight) / 2;   
         */     
-        scaleFactor = 2;
+        scaleFactor = 1; // is settings run first
         size(BASE_WIDTH * scaleFactor, BASE_HEIGHT * scaleFactor, JAVA2D); // set the size of the window
+        // noResize();
     }
 
     // initialize variables or game state
     @Override
     public void setup() {
-        player = new Player(400, 300, 100);
+        player = new Player(100, 100, 100, "player");
         
         float gravity = 3f;
         physicsHandler = new PhysicsHandler(gravity);
@@ -65,12 +64,18 @@ public class Game extends PApplet {
         frameRate(frameRate);
         
         backRGB = new int[]{190, 227, 219}; // '89B0AE'
-        objectRGB = new int[]{137, 176, 174}; // 'BEE3DB'
+        // objectRGB = new int[]{137, 176, 174}; // 'BEE3DB'
 
-        renderer = new Renderer();
+        renderer = new Renderer(this, scaleFactor);
         configManager = new ConfigManager(this, "src/main/resources/config/config.json");
         configManager.loadLevel(renderer, 0);
         // surface.setSize(1200, 600);
+
+        // centering window - done last to give surface more time to setup, could look into another fix later
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int)(screenSize.getWidth() - BASE_WIDTH * scaleFactor) / 2;
+        int y = (int)(screenSize.getHeight() - BASE_HEIGHT * scaleFactor) / 2;
+        surface.setLocation(x, y);
     }
 
     @Override
@@ -86,15 +91,13 @@ public class Game extends PApplet {
     @Override
     public void draw() {
         background(backRGB[0], backRGB[1], backRGB[2]);
-        fill(objectRGB[0], objectRGB[1], objectRGB[2]);
-        rect(0, BASE_HEIGHT*scaleFactor - 100, BASE_WIDTH*scaleFactor - 100, 20);
 
         float deltaTime = 1.0f / frameRate;
-        physicsHandler.update(deltaTime);
+        physicsHandler.update(renderer, deltaTime);
 
-        player.draw(this); // add a renderer later?
+        // player.draw(this); // add a renderer later?
 
-        renderer.drawLevel(this);
+        renderer.drawLevel();
 
         if (inputHandler.isKeyPressed('a')) { // handle within inputHandler? - handle in level class later? - when created, for now this is fine
             player.moveLeft();
@@ -105,8 +108,10 @@ public class Game extends PApplet {
         if (inputHandler.isKeyPressed('q')) {
             exit();
         }
+        if (inputHandler.isKeyPressed('w')) {
+            player.jump();
+        }
     }
-
     public static void main(String[] args) {
         PApplet.main("platformer.Game");
     }

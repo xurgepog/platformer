@@ -1,6 +1,5 @@
 package platformer;
 
-import processing.core.PApplet;
 import processing.core.PVector;
 
 public class Player implements PhysicsObject {
@@ -9,10 +8,15 @@ public class Player implements PhysicsObject {
     private PVector vel;
     private float speed;
 
-    public Player(float x, float y, float speed) {
+    private boolean onGround;
+    private PVector dimensions;
+    private String imageRef;
+
+    public Player(float x, float y, float speed, String imageRef) {
         pos = new PVector(x, y);
         vel = new PVector(0, 0);
         this.speed = speed;
+        this.imageRef = imageRef;
     }
 
     public void moveLeft() {
@@ -27,32 +31,54 @@ public class Player implements PhysicsObject {
         vel.x = 0;
     }
 
-    // public void update(float deltaTime) {
-    //     pos.x += vel.x * deltaTime;
-    // }
-
-    public void draw(PApplet app) {
-        app.rect(pos.x, pos.y, 50, 50);
+    public void jump() {
+        if (onGround) vel.y -= 20;
     }
 
     // setters and getters
+    // pos
     @Override
     public void setPos(PVector pos) {
         this.pos = pos;
     }
-
     @Override
     public PVector getPos() {
         return pos;
     }
 
+    // vel
     @Override
     public void setVel(PVector vel) {
         this.vel = vel;
     }
-    
     @Override
     public PVector getVel() {
         return vel;
+    }
+
+    // onGround
+    public void setOnGround(boolean onGround) {
+        this.onGround = onGround;
+    }
+    public boolean getOnGround() {
+        return onGround;
+    }
+
+    // dimensions
+    public void setDimensions(PVector dimensions) {
+        this.dimensions = dimensions;
+    }
+    public PVector getDimensions() {
+        return dimensions;
+    }
+
+    // imageRef
+    @Override
+    public void setImageRef(String imageRef) {
+        this.imageRef = imageRef;
+    }
+    @Override
+    public String getImageRef() {
+        return imageRef;
     }
 }
