@@ -1,6 +1,6 @@
-package platformer;
+package platformer.Framework;
 
-public class InputHandler {
+public class InputManager {
     
     private final boolean[] keys = new boolean[128];
 

@@ -178,24 +178,77 @@
     - Test feasibility of 16 x 16 tiles currently being used to test. Seems fun to work with, and easy to draw.
     - Create test cases once basic movement is complete.
 
-# [20-12-2024] Day 10: 
-- Will try out using *PhysicsHandler* to call for each of the *PhysicsObjects* to be drawn.
-- Each *PhysicsObject* will hold the image reference to be passed to the renderer in the *PhysicsHandler* loop that passes through all the objects.
-- Now need a way to tell if the player is on the ground. For now lookup position of feet, if on ground don't add gravity and set feet level with ground.
+# [20-12-2024] Day 10: PhysicsHandler Improving
+- **PhysicsHandler Progression:**
+  - Will try out using *PhysicsHandler* to call for each of the *PhysicsObjects* to be drawn.
+  - Each *PhysicsObject* will hold the image reference to be passed to the renderer in the *PhysicsHandler* loop that passes through all the objects.
+  - Now need a way to tell if the player is on the ground. For now lookup position of feet, if on ground don't add gravity and set feet level with ground.
 
-# [23-12-2024] Day 11: 
-- Want to add ability to jump. I think just make it an instant increase in y velocity. Can only jump when touching ground.
-- Also want to make friction feel better, right now just dividing the movement.
-- I should be able to fit 40 16x16 tiles across the screen, however at a scale factor of 2 can only fit 38
-- When the scale factor is increased to 3, can fit 39. This hints at potentially some margins or something cutting off the right side of the screen.
-- To introduce hitboxes, will add width and height requirement to the *physicsObject* interface.
+# [23-12-2024] Day 11: Implementations and Bugs
+- **To Implement**:
+  - Want to add ability to jump. I think just make it an instant increase in y velocity. Can only jump when touching ground.
+  - Added friction, but it feels off. Right now just dividing the movement.
+  - To introduce hitboxes, will add width and height requirement to the *physicsObject* interface.
 
-# [24-12-2024] Day 12: 
-- Want all objects inside hitbox to be returned in the *Renderer*'s *typeTouching()* function.
-- All the handlers and managers are getting a bit messy in *Game.java*. Will try to add a *setupManagers* class.
+- **Window Bug**: Currently struggling to fix.
+  - I should be able to fit 40 16x16 tiles across the screen, however at a scale factor of 2 can only fit 38
+  - When the scale factor is increased to 3, can fit 39. This hints at potentially some margins or something cutting off the right side of the screen.
 
-# [26-12-2024] Day 13: 
-- Losing motivation a bit lol. Tbf it was just Christmas.
-- Main issue is that I have focused really hard on ensuring a strong foundation.
-- It just feels a bit like I am not learning that much. Since it is kind of just, think of simple thing to add to framework. Implemement it. Repeat.
-- Might take a break and start a smaller side project. 
+
+# [24-12-2024] Day 12: Brief Brainstorm
+- **To Implement**:
+  - Want all objects inside hitbox to be returned in the *Renderer*'s *typeTouching()* function.
+  - All the handlers and managers are getting a bit messy in *Game.java*. Will try to add a *setupManagers* class.
+
+# [26-12-2024] Day 13: Bug Fix!
+- Finally fixed the window bug by swapping back to Windows (ironic I know).
+- Graphical issue seemed to be caused by remote VSCode being run through WSL.
+- Previous progress has felt stunted due to this bug being hard to fix. Didn't document much since nothing was working.
+
+- **Next Steps**: Now that the window is fixed finally.
+  - Set up *SetupManagers*. This can wait until some level manager is created. Will be clearer what is required of this *SetupManagers* class then.
+  - Code hitboxes, that is, be able to detect all tiles being touched by requested object.
+  - Add jumping.
+  - Try out adding border to for different screen sizes and resolutions to function. (This can wait for a while, but placing here as a way to remember).
+
+# [27-12-2024] Day 14: Cleaning Up / Refining Files
+- **Code Clarity**:
+  - I feel as though the framework is becoming a bit undefined.
+  - Will attempt to rectify this by polishing and commenting what has already been done.
+
+- **Config Changes**:
+  - Set up default values in *config.json* for gravity and friction coefficient.
+  - Will setup other managers here, rather than through *SetupManagers*. Will delete that file now.
+  - Made it so *ConfigManager* passes appropriate values to other managers in its constructor.
+  - The previously mentioned physics values to *PhysicsManager*, and the image folder location to *Renderer* for now.
+
+- **Renderer Changes**:
+  - Will try to centralise the *drawImage* calls to *Renderer*. This means removing some current *PhysicsManager* logic.
+  - Want to remove *Game* instance being stored in a variable. Feels bad for encapsulation.
+  - Want to make it so level sizes do not have to be manually set to function, could be resolved using dynamic arrays.
+  - Made it so level layout is stored in an *ArrayList* so that it is dynamic, and no longer needs its size set manually.
+  - Changed *typeTouching()* to return the pngName being touched. Still yet to implement hitboxes.
+  - Will make it so that hitboxes are directly tied to their PImage. This means it will be handled in *Renderer*.
+  - For now that means returning an *ArrayList* of all tiles being touched by image.
+  
+- **PhysicsManager Changes**:
+  - Pretty much removed the dimensions and imageLoc functionalitees and delegated them to other classes.
+  - Added a function to take default physics values (gravity and friction coeffecient rn) as single parameters, may have to change to an array param later if larger sets of vaules.
+
+- **Next steps**:
+  - Currently falling too far before being stopped. Fix this. Potentially a hitbox issue.
+  - Look into doubling the size of level's text files.
+  - Add an entities list that holds all non-tile objects to be drawn.
+  - Add jumping and other basic movement.
+
+# [28-12-2024] Day 15: Some fixes and some issues
+- **Fixes**:
+  - Fixed falling through block problem, but feels like an odd fix. <= for y but only < check for x.
+  - Realised that will need direction of blocks being touched. So maybe return a second *ArrayList* that holds *PVector*s for the value of the tile.
+  - Added a wrapper class in order to return both these *ArrayList*s whilst maintaining type safety.
+  
+- **To Do:**
+  - Might want to also return the images 'hitbox' / dimensions for calculating direction of object being touched.
+  - Want it so that things like friction are not applied when holding down run?
+  - If falling fast can fall through block a couple of pixels. Need to fix.
+  - Maybe on hitting ground realign? Also add a max velocity from gravity alone. Or at least something it approaches.

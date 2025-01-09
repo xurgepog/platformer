@@ -1,20 +1,19 @@
-package platformer;
+package platformer.Framework;
 
 import processing.core.PVector;
 
 public interface PhysicsObject {
+    // physics
     void setPos(PVector pos);
     PVector getPos();
 
     void setVel(PVector vel);
     PVector getVel();
 
-    void setOnGround(boolean onGround);
-    boolean getOnGround();
+    // other
+    void setTouched(boolean[] touched);
+    boolean[] getTouched();
 
-    void setDimensions(PVector dimensions);
-    PVector getDimensions();
-
-    void setImageRef(String imageRef);
+    // void setImageRef(String imageRef);
     String getImageRef();
 }

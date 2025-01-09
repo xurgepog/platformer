@@ -1,0 +1,113 @@
+
+# [04-01-2025] Day 16: New Year, On Holidays
+- **New Year Mentions**:
+  - Happy New Year!
+  - Had a bit of a break due to celebrating and focusing on *LeetCode*.
+  - Currently on a plane so there is no internet, however, will do as much as I can, and plan for what I can't.
+
+- **To Research**: Once I have internet.
+  - Consider having all objects nearby returned without a tiles system. This will allow a centralised method.
+  - Look into how other games manage hitboxes and calculating what is being touched. 
+  - Research how max velocity is calculated. This will allows different interaction when the player travels through different mediums (e.g. water).
+  - Don't want it to ruin fun momentum tricks when added however.
+  - Need to see how games make the camera follow the player. Think this must be done through moving all tiles, but maybe there is an easier way built into **Processing**.
+  - Look into OOP principles, since I think my framework code is a bit messy when considering encapsulation.
+
+# [06-01-2025] Day 17: Researching Previous Mentions
+- **Research**:
+  - Look into what was previously mentioned.
+  - Most the solutions were what I was already thinking.
+  - Will keep the grid system. Considering adding another 2D array for the entities, used to see all within a certain radius.
+  - To stop player falling through the ground need to check where they will be after applying velocity, not where they are now.
+  - To allow entities to be spawned via the level text files, will need to increase the text file size to allow for more variation of inputs. Will try 2x2 for each tile.
+  - Considering making it easy to change the size representation, increase I want to go to 3x3 later.
+
+- **To Do**: Step by step.
+  - Beginning to lack some motivation.
+  - I think I just need to clearly set out what I plan on doing.
+  - First I want to get basics physics polished in *PhysicsManager*. This includes properly implementing hitboxes.
+  - Then I will encapsulate better, look through managers and decide what needs to be done.
+  - I will make it so the camera follows the player.
+  - Increase size of level text files.
+  - Remove any magic numbers.
+  - Add entities.
+  - Polish framework with basic movement and physisc.
+  - Add more complex movement such as dashes.
+
+- **Polishing PhysicsManager**:
+  - Changing order of logic. Will add basic physics first then check the new location for what is within hitbox
+  - Will introduce forces.
+    - Force from gravity = mass * acceleration of gravity
+    - Drag force = 0.5f * density (of the fluid) * dragCoefficient (dependent on shape) * area (cross section) * vel.y squared
+    - Will update *PhysicsObject* to allow these variables.
+  - To assist in these calculations, will change current and future float values to doubles.
+  - In order to better calculate cross section area
+
+- **Honing Game Idea**: Physics appreciation game.
+  - Maybe lean more towards accurate physics than gameplay.
+  - Could give player a grappling hook and implement it using pendulum physics.
+  - This would require being able to calculate drag at different angles I believe.
+  - I imagine drag can be broken into x and y components as all forces can (if I remember correctly... it's been 2 years ok).
+  - More physics to include: collisions, torque, buoyancy, static and kinetic friction, pressure, energy conservation, centripedal and centrifugal forces.
+    - This list can be made more extensive later.
+    - Will probably aim to get a finished framework with some basic forces before adding all of those listed here even.
+    - Want to complete two side projects by end of Feb after all.
+    - Can return to this project later.
+  - Might try and go for a rain world asthetic.
+  - Also want objects to be able to fall on angles. This may take some thought to manage.
+
+- **Formatting Logs**: Improvements.
+  - Went back and formatted previous logs a bit better from the previous week.
+  - Noticed some things may be worth researching a bit more as I was doing so.
+  - Will try and format logs better as I go from now on to ensure both a better workflow and easier understanding of what I was saying previously.
+  - I think I should choose a specific goal and work on that for a day, because pre-formatting the logs are very messy and all over the place.
+  - I believe this is impacting my efficiency, and due to working on such a variety of things at once, not everything I do is being logged.
+  - Also added *jan-log.md* which this text is in currently. Forgot to do so orginally.
+
+# [07-01-2025] Day 18:
+- **Idea Comments**:
+  - Not sure if I should fully commit to the physics simulator.
+  - I like the idea of using real world equations in the game. But, anything that can be simplified should be I think.
+  - I have a plan on encorporating it in a later project.
+  - Also might not have any entities, nor have camera follow the player.
+  - Instead do screen by screen.
+
+- **Today's Goal**:
+  - I know I previously mentioned step by step what I want to do, but going into more detail on how to finish *PhysicsManager*.
+  - Want to get all the different attributes to be added to *PhysicsObject* that were required by forces mentioned in previous day.
+  - If *Player* is the only *PhysicsObject* don't need the class.
+  - Might keep it, want to try and have blocks fall etc.
+  - Will return doubles back to floats, do not require that much precicion.
+  - Added boolean array that checks which sides of physics object is blocked, stopping movement in that direction.
+  - Changed *onGround* to *touched* to hold this array in each object.
+  - By included mass to *PhsycicsObject*, can allow things to fly, while also being blocked.
+  - Give up on idea to calculate next position. Instead if would caclulate in ground, move to appropriate spot.
+  - Removing mass and drag calculations. Unnecessary for my simple platformer.
+  
+
+- **To Do**:
+  - Make the array of tiles not hold strings, but objects. Each object will have the reference name, and if its physical or interactable, etc.
+  - Change image getter to have better variables names.
+  - Fix touching calculation, remember drawn from top left.
+
+- **To Improve Next Time**:
+  - Use stubs more. That is, code a single part with set numbers. Don't tackle it all at once.
+  - Don't try to make a module perfect straight away. It is ok to be messy. Once the module works, refine it.
+  - Add and commit more. I guess have a clearer goal for the day. Complete the goal / module, then commit it.
+
+# [08-01-2025] Day 19:
+- **What to do now...**:
+  - Not going to lie, it is a lot of work to create something like this from scratch.
+  - Been having complex ideas that I am too scared to implement.
+  - Not sure if I should just try anyway.
+  - Will complete everything I said first. Then choose what to do from there based on my confidence.
+
+- **Coding**:
+  - Made it so *TouchingPos* returns the actual pixel of the tile being touched, rather than the tile position.
+  - Added *dimensions* to *TouchingData* so that the size of the hitbox used is returned as well.
+  - Used *dimensions* to set player back onto block touching. That is stoped phasing through blocks at high speeds.
+
+# [09-01-2025] Day 20:
+- **Collision**:
+  - 
+  - 

@@ -3,8 +3,8 @@
     "levels": [
         {
             "layout": "level1.txt",
-            "levelWidth": 38,
-            "levelHeight": 21
+            "levelWidth": 40,
+            "levelHeight": 22
         }
     ],
     "references": {

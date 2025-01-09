@@ -1,38 +1,37 @@
 package platformer;
 
+import platformer.Framework.PhysicsObject;
 import processing.core.PVector;
 
 public class Player implements PhysicsObject {
+
+    // constants - delegate to config later
+    private final float SPEED = 100;
+    private final String IMAGE_REF = "player";
     
+    // core values
     private PVector pos;
     private PVector vel;
-    private float speed;
 
-    private boolean onGround;
-    private PVector dimensions;
-    private String imageRef;
+    // other
+    private boolean[] touched;
 
-    public Player(float x, float y, float speed, String imageRef) {
+    public Player(float x, float y) {
         pos = new PVector(x, y);
         vel = new PVector(0, 0);
-        this.speed = speed;
-        this.imageRef = imageRef;
+
+        touched = new boolean[4]; // up, down, left, right respectively
     }
 
+    // apply movement
     public void moveLeft() {
-        vel.x = -speed;
+        vel.x = -SPEED;
     }
-
     public void moveRight() {
-        vel.x = speed;
+        vel.x = SPEED;
     }
-
-    public void stopMoving() {
-        vel.x = 0;
-    }
-
     public void jump() {
-        if (onGround) vel.y -= 20;
+        if (touched[1]) vel.y -= 60;
     }
 
     // setters and getters
@@ -57,28 +56,20 @@ public class Player implements PhysicsObject {
     }
 
     // onGround
-    public void setOnGround(boolean onGround) {
-        this.onGround = onGround;
+    public void setTouched(boolean[] touched) {
+        this.touched = touched;
     }
-    public boolean getOnGround() {
-        return onGround;
-    }
-
-    // dimensions
-    public void setDimensions(PVector dimensions) {
-        this.dimensions = dimensions;
-    }
-    public PVector getDimensions() {
-        return dimensions;
+    public boolean[] getTouched() {
+        return touched;
     }
 
     // imageRef
-    @Override
-    public void setImageRef(String imageRef) {
-        this.imageRef = imageRef;
-    }
+    // @Override - until handled by config is left constant therefore no setting
+    // public void setImageRef(String imageRef) {
+    //     this.IMAGE_REF = imageRef;
+    // }
     @Override
     public String getImageRef() {
-        return imageRef;
+        return IMAGE_REF;
     }
 }

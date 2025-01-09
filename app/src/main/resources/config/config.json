@@ -11,5 +11,9 @@
             "save": "save.json",
             "levels": "levels.json"
         }
+    },
+    "default-values": {
+        "gravity": 4.4,
+        "friction-coeff": 0.8
     }
 }
