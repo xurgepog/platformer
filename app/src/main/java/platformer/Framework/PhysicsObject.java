@@ -3,6 +3,9 @@ package platformer.Framework;
 import processing.core.PVector;
 
 public interface PhysicsObject {
+
+    void update(float deltaTime);
+
     // physics
     void setPos(PVector pos);
     PVector getPos();
@@ -12,7 +15,7 @@ public interface PhysicsObject {
 
     // other
     void setTouched(boolean[] touched);
-    boolean[] getTouched();
+    boolean[] getTouched(); // not used yet, but may be required for some interactions.
 
     // void setImageRef(String imageRef);
     String getImageRef();

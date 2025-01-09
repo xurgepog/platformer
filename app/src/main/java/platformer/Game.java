@@ -111,16 +111,19 @@ public class Game extends PApplet {
 
         renderer.drawLevel(this);
 
-        if (inputManager.isKeyPressed('a')) { // handle within inputHandler? - handle in level class later? - when created, for now this is fine
-            player.moveLeft();
-        }
-        if (inputManager.isKeyPressed('d')) {
-            player.moveRight();
-        }
+        // handle below within inputHandler? - handle in level class later? - when created, for now this is fine
         if (inputManager.isKeyPressed('q')) {
             exit();
         }
-        if (inputManager.isKeyPressed('w')) {
+        // wasd stuff
+        boolean[] wasd = {inputManager.isKeyPressed('w'), inputManager.isKeyPressed('a'), inputManager.isKeyPressed('s'), inputManager.isKeyPressed('d')};
+        if (wasd[1]) player.moveLeft();
+        if (wasd[3]) player.moveRight();
+        
+        if (inputManager.isKeyPressed('m')) {
+            player.dash(wasd);
+        }
+        else if (wasd[0]) {
             player.jump();
         }
     }

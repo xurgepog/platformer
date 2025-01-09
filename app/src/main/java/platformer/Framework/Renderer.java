@@ -117,4 +117,8 @@ public class Renderer {
     public void setImageLoc(String imageLoc) {
         this.imageLoc = imageLoc;
     }
+
+    public int getTileSize() {
+        return TILE_SIZE;
+    }
 }

@@ -13,7 +13,8 @@ public class PhysicsManager {
     private float gravity;
     private float frictionCoeff;
 
-    private final int LENIENCY = 10; // how many pixels of the players bottom and top counts as below and above
+    private final int LENIENCY = 5; // pixels into player that is still considered above or below
+    private final int SQUISH = 5; // pixels player can walk into block on sides before stopping
 
     public void addObject(PhysicsObject obj) {
         physicsObjects.add(obj);
@@ -34,34 +35,61 @@ public class PhysicsManager {
             PVector dimensions = touching.getDimensions();
 
             boolean touched[] = new boolean[4]; // up, down, left, right respectively
+            int tileSize = renderer.getTileSize();
             for (int i = 0; i < touchingType.size(); i++) {
                 if (touchingType.get(i).equals("ground")) {
-                    float yTouch = touchingPos.get(i).y;
-                    float xTouch = touchingPos.get(i).x;
+
+                    PVector tile = new PVector(touchingPos.get(i).x, touchingPos.get(i).y);
+                    
                     // System.out.println("pos.y: " + (pos.y + dimensions.y) + " yTouch: " + yTouch);
-                    if (pos.y + LENIENCY > yTouch) {
+
+                    boolean topCheck = tile.y + tileSize - LENIENCY < pos.y;
+                    boolean botCheck = tile.y + LENIENCY > pos.y + dimensions.y;
+                    boolean edgeCheck = tile.x + 5 < pos.x + dimensions.x && tile.x + tileSize - 5 > pos.x; // look out for magic numbers, could also fail if fast
+
+                    // top collision
+                    if (topCheck && edgeCheck) {
                         touched[0] = true;
                     }
-                    if (pos.y + dimensions.y - LENIENCY < yTouch) {
+
+                    // bottom collision
+                    if (botCheck && edgeCheck) {
                         touched[1] = true;
-                        if (pos.y != yTouch - dimensions.y) {
-                            pos.y = yTouch - dimensions.y; // used to stop player falling partway through block
-                            break;
+                    }
+
+                    // if tile touched is to the sides, compare centre of object vs tile
+                    if (!topCheck && !botCheck) {
+                        // left collision
+                        if (tile.x + (tileSize / 2) < pos.x + (dimensions.x / 2)) {
+                            touched[2] = true;
                         }
-                    }
-                    if (pos.x > xTouch && pos.y + dimensions.y != yTouch) {
-                        touched[2] = true;
-                    }
-                    if (xTouch > pos.x && pos.y + dimensions.y != yTouch) {
-                        touched[3] = true;
-                        // pos.x = xTouch - dimensions.x;
+                        
+                        // right collision
+                        if (tile.x + (tileSize / 2) > pos.x + (dimensions.x / 2)) {
+                            touched[3] = true;
+                        }
                     }
                 }
             }
             obj.setTouched(touched);
 
+            // stopping phasing part way through blocks
+            for (int i = 0; i < touched.length; i++) {
+                if (touched[i]) {
+                    if (Math.abs(vel.y) > Math.abs(vel.x) && (i == 0 || i == 1)) {
+                        if (pos.y % 16 != 0) {
+                            if (vel.y > 0) pos.y = pos.y - (pos.y % 16);
+                            else pos.y = pos.y + (16 - (pos.y % 16));
+                        }
+                    }
+                    
+                    break;
+                }
+            }
+            
+
             // apply forces
-            vel.y += gravity;
+            if (vel.y < 200) vel.y += gravity;
             vel.x *= frictionCoeff; // apply friction (same in air and on ground for now)
 
             // stop movement in certain directions
@@ -75,6 +103,8 @@ public class PhysicsManager {
 
             obj.setPos(pos);
             obj.setVel(vel);
+
+            obj.update(deltaTime); // maybe have a centralised updater later
 
             renderer.drawImage(game, imageRef, pos.x, pos.y);
         }
