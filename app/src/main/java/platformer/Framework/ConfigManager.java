@@ -12,7 +12,10 @@ public class ConfigManager {
     
     private final String CONFIG_LOC = "src/main/resources/config/config.json";
 
+    private FrameworkManager FWMan;
+
     private JSONObject configData;
+    private JSONObject directories; //remove later?? - maybe add all as global??
 
     private JSONObject settingsData;
     
@@ -22,32 +25,41 @@ public class ConfigManager {
     private String levelsLoc;
     private JSONArray levels;
 
-    public ConfigManager(Game game, PhysicsManager physicsManager, Renderer renderer) {
+    public ConfigManager() {
+        // load framwork manager
+        FWMan = FrameworkManager.getFrameworkManager();
+        Game game = FWMan.getGame();
+
+        // setup config files
         configData = game.loadJSONObject(CONFIG_LOC);
         
         // retrieve the data for directories and files from within the paths jsonobject
         JSONObject paths = configData.getJSONObject("paths");
-        JSONObject directories = paths.getJSONObject("directories");
+        directories = paths.getJSONObject("directories");
         JSONObject files = paths.getJSONObject("files");
 
         // load the other json files
         settingsData = getConfig(game, directories, files, "settings");
         saveData = getConfig(game, directories, files, "save");
         levelData = getConfig(game, directories, files, "levels");
-
-        // setup other managers
-        // physics manager
-        JSONObject defaultPhysics = configData.getJSONObject("default-values");
-        physicsManager.setPhysics(defaultPhysics.getFloat("gravity"), defaultPhysics.getFloat("friction-coeff")); // maybe send a list later
-
-        // renderer
-        String imagesLoc = directories.getString("images");
-        renderer.setImageLoc(imagesLoc);
     }
 
     // returns loaded jsonobject using its reference in config.json paths
     private JSONObject getConfig(Game game, JSONObject directories, JSONObject files, String reference) {
         return game.loadJSONObject(directories.getString(reference) + files.getString(reference));
+    }
+
+    public void setupInterdependencies() { // temp name, probs change later??
+        // setup other managers - need to put somewhere else, maybe in setting up interdependencies section
+        // physics manager
+        PhysicsManager physicsManager = FWMan.getPhysicsManager();
+        JSONObject defaultPhysics = configData.getJSONObject("default-values");
+        physicsManager.setPhysics(defaultPhysics.getFloat("gravity"), defaultPhysics.getFloat("friction-coeff")); // maybe send a list later
+
+        // renderer
+        Renderer renderer = FWMan.getRenderer();
+        String imagesLoc = directories.getString("images");
+        renderer.setImageLoc(imagesLoc);
     }
 
     public void loadLevel(Renderer renderer, int levelNum) {

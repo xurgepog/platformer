@@ -8,6 +8,8 @@ import platformer.Wrappers.TouchingData;
 import processing.core.PVector;
 
 public class PhysicsManager {
+
+    private FrameworkManager FWMan;
     
     private List<PhysicsObject> physicsObjects = new ArrayList<>();
     private float gravity;
@@ -16,11 +18,18 @@ public class PhysicsManager {
     private final int LENIENCY = 5; // pixels into player that is still considered above or below
     private final int SQUISH = 5; // pixels player can walk into block on sides before stopping
 
+    public PhysicsManager() {
+        // load framwork manager
+        FWMan = FrameworkManager.getFrameworkManager();
+    }
+
     public void addObject(PhysicsObject obj) {
         physicsObjects.add(obj);
     }
 
-    public void update(Game game, Renderer renderer, float deltaTime) {
+    public void update(float deltaTime) {
+        Renderer renderer = FWMan.getRenderer();
+
         for (PhysicsObject obj : physicsObjects) {
             
             // retrieving main variables
@@ -29,7 +38,7 @@ public class PhysicsManager {
             String imageRef = obj.getImageRef();            
 
             // get tiles being touched
-            TouchingData touching = renderer.typesTouching(game, (int) pos.x, (int) pos.y, imageRef);
+            TouchingData touching = renderer.typesTouching((int) pos.x, (int) pos.y, imageRef);
             List<String> touchingType = touching.getTouchingTypes();
             List<PVector> touchingPos = touching.getTouchingPos();
             PVector dimensions = touching.getDimensions();
@@ -106,7 +115,7 @@ public class PhysicsManager {
 
             obj.update(deltaTime); // maybe have a centralised updater later
 
-            renderer.drawImage(game, imageRef, pos.x, pos.y);
+            renderer.drawImage(imageRef, pos.x, pos.y);
         }
     }
 

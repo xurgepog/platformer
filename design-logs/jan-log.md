@@ -64,7 +64,7 @@
   - I believe this is impacting my efficiency, and due to working on such a variety of things at once, not everything I do is being logged.
   - Also added *jan-log.md* which this text is in currently. Forgot to do so orginally.
 
-# [07-01-2025] Day 18:
+# [07-01-2025] Day 18: Minor changes, big impacts
 - **Idea Comments**:
   - Not sure if I should fully commit to the physics simulator.
   - I like the idea of using real world equations in the game. But, anything that can be simplified should be I think.
@@ -95,7 +95,7 @@
   - Don't try to make a module perfect straight away. It is ok to be messy. Once the module works, refine it.
   - Add and commit more. I guess have a clearer goal for the day. Complete the goal / module, then commit it.
 
-# [08-01-2025] Day 19:
+# [08-01-2025] Day 19: Polishing
 - **What to do now...**:
   - Not going to lie, it is a lot of work to create something like this from scratch.
   - Been having complex ideas that I am too scared to implement.
@@ -107,7 +107,73 @@
   - Added *dimensions* to *TouchingData* so that the size of the hitbox used is returned as well.
   - Used *dimensions* to set player back onto block touching. That is stoped phasing through blocks at high speeds.
 
-# [09-01-2025] Day 20:
+# [09-01-2025] Day 20: Basic Collision and Movement Near Completion
 - **Collision**:
-  - 
-  - 
+  - I think it seems more natural to let the play phase partway through a block when approaching it from the side.
+  - Can add an animation to make it look normal.
+  - Will potentially add this after all basics are done.
+  - Need to consider phasing through blocks when dashes are added.
+  - Made it so that if a block is considered below or above object, is not considered for blocking.
+  - Depending on which direction currently going, push out opposite to which ever axis is fastest.
+  - Need to make it so if tile is on very edge of object it is not considered above or below.
+
+- **Movement**:
+  - Playing with max y velocity before gravity stops being added. This way it doesn't force a max speed, but stops natural acceleration past a certain point.
+  - Need to make jump reset once leaving the ground. Other wise can stack jumps.
+  - Time to add dash! For now use 'm' to dash. Will just add velocity in current direction.
+  - Can press both jump and dash at once to go super far. Prioritise dash maybe.
+  - Didn't work. Issue is adding to velocity rather than setting it. Want momentum though.
+  - Maybe dash increases speed to set amount. If any faster already does nothing.
+  - Might be good enough for now.
+  - Dashing feels not that impactful when done sideways. This is because of the friction applied.
+  - Think I will make dash last a certain amount of time.
+  - To implement I think I will need to make *physicsObject* have an update function.
+  - For now will call the function in *PhysicsManager*. May centralise all updates later.
+
+- **Framework Manager**:
+  - Now that I am beginning to development movement, need to start considering where the user inputs are going to be actually handled.
+  - That is, what tells the player to jump when 'w' is pressed.
+  - If the framework had a manager, like previously discussed and discarded, could pass the input handler into physics objects.
+  - Then from here the object could check for itself.
+  - Just did some research and due to the interdependencies between my Managers, it is a good idea to add a framework manager.
+  - Added *FrameworkManager* class. Name could be subject to change.
+
+# [11-01-2025] Day 20: Implementing Framework Mangager
+- **Framework Manager Creation Ideas**:
+  - Maybe make the manager hold public instances of each of managers.
+  - If I make the instances protected and static does this mean only things in the *Framework* folder can access them.
+  - Feels a bit unprotected. Essentially have four global instance that can be handled from anywhere, since with no instance, all methods must be static as well.
+  - Research indicates that a *singleton* might be a good fit.
+  - A *singleton* is a class that has a single instance, and stores itself in a static variable.
+  - Is still global, but can limit access of methods through protected access modifier.
+  - Is done by constructing the instance in a static function, but having a private constructor so it can not be initialised directly.
+  - Means that main instance can be held in *Game*, but only other files in the framework can access and modify the important parts.
+  - Can use a static function to return the static instance so that it can be renamed as wanted for code cleanliness.
+  - Also means that instance can be made private, and that a constructor can be used.
+  - Need to think if it is better to have protected attributes, or their associated setters and getters be protected.
+  - Will use protected getters, private attributes.
+  - Now want to fix the managers impacted by these changes, and have a set format for handling interdependencies between managers.
+  - Want to limit parameters required by manager constructors.
+  - Potentially remove need for game by having an instance stored.
+  - Could have all game requiring function calls be done in *FrameworkManager*. Similar to the kernel passing its system calls to the OS. 
+
+- **Framework Mananger Progress**: Listing what has actually occurerd (not ideas)
+  - Made *Framework* manager a *singleton*. Uses protected functions to only allow other managers to access important data.
+  - Will use private variables with protected getters.
+  - Added getters for each of the managers.
+
+# [12-01-2025] Day 20: Completing Basic Framework Manager
+- **Framework Manager Progress**:
+  - Hold *Game* instance in the *Framework Manager*, and pass it to the required functions directly using a getter.
+  - Created a *createFrameworkManager* function that sets up the *Game* instance, and removes need for *Game* to call the getter.
+  - If getter is called prior to creation, throw some exception. (Look up exception types when internet)
+  - If creation is called more than once, throw an exception.
+  - Will use *IllegalStateException*.
+  - Now *Game* is only accessible through this manager and the *Game* file itself!
+  - Changed manager getters to public so that they are accessible to *Game*.
+  - Made it so managers are initialised after instance is.
+
+- **Other Ideas**:
+  - Maybe split *PhysicsManagers* update function up for clearer code? Right now a lot of code all in one function.
+  - Look at other files and see if any other functions suffer from this same fault.
+  - Need to look into what makes a useful exception. Ones implemented today might not be useful, and want to know for future exception usage.

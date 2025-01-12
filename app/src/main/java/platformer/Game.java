@@ -4,9 +4,9 @@ import processing.core.PApplet;
 
 import java.awt.Dimension;  // used for getting user screen dimensions
 import java.awt.Toolkit;
-import java.time.chrono.JapaneseChronology;
 
 import platformer.Framework.ConfigManager;
+import platformer.Framework.FrameworkManager;
 import platformer.Framework.InputManager;
 import platformer.Framework.PhysicsManager;
 import platformer.Framework.Renderer;
@@ -14,6 +14,8 @@ import platformer.Framework.Renderer;
 public class Game extends PApplet {
 
     // framework
+    private FrameworkManager FWMan;
+
     private ConfigManager configManager;
     private PhysicsManager physicsManager;
     private Renderer renderer;
@@ -67,10 +69,12 @@ public class Game extends PApplet {
         frameRate(frameRate);
 
         // initialise framework
-        inputManager = new InputManager();
-        physicsManager = new PhysicsManager();
-        renderer = new Renderer(scaleFactor);
-        configManager = new ConfigManager(this, physicsManager, renderer); // uses game instance to loadJSONObject()
+        FWMan = FrameworkManager.createFrameworkManager(this);
+
+        configManager = FWMan.getConfigManager();
+        physicsManager = FWMan.getPhysicsManager();
+        renderer = FWMan.getRenderer();
+        inputManager = FWMan.getInputManager();
 
         player = new Player(100, 100);
         physicsManager.addObject(player);
@@ -105,11 +109,11 @@ public class Game extends PApplet {
         background(backRGB[0], backRGB[1], backRGB[2]); // replace with image later
 
         float deltaTime = 1.0f / frameRate;
-        physicsManager.update(this, renderer, deltaTime);
+        physicsManager.update(deltaTime);
 
         // player.draw(this); // add a renderer later?
 
-        renderer.drawLevel(this);
+        renderer.drawLevel();
 
         // handle below within inputHandler? - handle in level class later? - when created, for now this is fine
         if (inputManager.isKeyPressed('q')) {
