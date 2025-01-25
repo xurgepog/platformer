@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import java.util.HashMap;
+
 import platformer.Game;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
@@ -15,46 +17,56 @@ public class ConfigManager {
     private FrameworkManager FWMan;
 
     private JSONObject configData;
-    private JSONObject directories; //remove later?? - maybe add all as global??
+    private JSONObject files;
+    private JSONObject directories;
 
     private JSONObject settingsData;
     
     private JSONObject saveData;
 
     private JSONObject levelData;
-    private String levelsLoc;
+    private String levelLayoutsDir;
     private JSONArray levels;
+    private JSONObject imageRefs;
 
     public ConfigManager() {
         // load framwork manager
         FWMan = FrameworkManager.getFrameworkManager();
-        Game game = FWMan.getGame();
+        Game game = FWMan.getGame(); // game required to loadJSONObjects
 
         // setup config files
         configData = game.loadJSONObject(CONFIG_LOC);
         
         // retrieve the data for directories and files from within the paths jsonobject
         JSONObject paths = configData.getJSONObject("paths");
+        files = paths.getJSONObject("files");
         directories = paths.getJSONObject("directories");
-        JSONObject files = paths.getJSONObject("files");
 
         // load the other json files
-        settingsData = getConfig(game, directories, files, "settings");
-        saveData = getConfig(game, directories, files, "save");
-        levelData = getConfig(game, directories, files, "levels");
+        String configDir = directories.getString("config");
+        settingsData = game.loadJSONObject(configDir + files.getString("settings"));
+        saveData = game.loadJSONObject(configDir + files.getString("save"));
+        levelData = game.loadJSONObject(configDir + files.getString("levels"));
+
+        // levels loading
+        levelLayoutsDir = directories.getString("level-layouts");
+        levels = levelData.getJSONArray("levels");
+        imageRefs = levelData.getJSONObject("image-refs");
     }
 
-    // returns loaded jsonobject using its reference in config.json paths
-    private JSONObject getConfig(Game game, JSONObject directories, JSONObject files, String reference) {
-        return game.loadJSONObject(directories.getString(reference) + files.getString(reference));
-    }
-
-    public void setupInterdependencies() { // temp name, probs change later??
-        // setup other managers - need to put somewhere else, maybe in setting up interdependencies section
+    public void setupInterdependencies() {        
         // physics manager
         PhysicsManager physicsManager = FWMan.getPhysicsManager();
-        JSONObject defaultPhysics = configData.getJSONObject("default-values");
-        physicsManager.setPhysics(defaultPhysics.getFloat("gravity"), defaultPhysics.getFloat("friction-coeff")); // maybe send a list later
+        
+        JSONObject physics = configData.getJSONObject("physics");
+        HashMap<String, Float> physicsValues = new HashMap<>();
+
+            // grab values from physics object in config.json and send them to physicsManager
+        physicsValues.put("gravity", physics.getFloat("gravity"));
+        physicsValues.put("friction-coeff", physics.getFloat("friction-coeff"));
+        physicsValues.put("terminal-vel", physics.getFloat("terminal-vel"));
+
+        physicsManager.setPhysics(physicsValues);
 
         // renderer
         Renderer renderer = FWMan.getRenderer();
@@ -62,31 +74,30 @@ public class ConfigManager {
         renderer.setImageLoc(imagesLoc);
     }
 
-    public void loadLevel(Renderer renderer, int levelNum) {
-        // if levels location or levels info has not been loaded before, do so
-        if (levelsLoc == null) 
-            levelsLoc = levelData.getString("levelsLocation");
-        if (levels == null)
-            levels = levelData.getJSONArray("levels");
+    // draws the level onto the screen by reading the appropriate text file
+    public void loadLevel(int levelNum) {      
+        Renderer renderer = FWMan.getRenderer();  
         
-        JSONObject level = levels.getJSONObject(levelNum);
+        JSONObject level = levels.getJSONObject(levelNum);        
+        String levelLayout = level.getString("layout");
         
-        // draws the level onto the screen by reading the appropriate text file
-        String levelFile = level.getString("layout");
-        try(BufferedReader reader = new BufferedReader(new FileReader(levelsLoc + levelFile))) {
+        // open file to read
+        try(BufferedReader reader = new BufferedReader(new FileReader(levelLayoutsDir + levelLayout))) {
+            
             String line;
             int lineCount = 0;
-            JSONObject references = levelData.getJSONObject("references");
+            // read each line
             while ((line = reader.readLine()) != null) {
                 
                 String key;
+                // read each character
                 for (int i = 0; i < line.length(); i++) {
                     key = Character.toString(line.charAt(i));
                     if (i + 1 < line.length() && Character.isDigit(line.charAt(i + 1))) { // if next letter is a number, add to key and skip over it
                         key += line.charAt(i + 1);
                         i++;
                     }
-                    String pngName = getPngName(references, key); // get the png name of the key
+                    String pngName = imageRefs.getString(key); // get the png name of the key
                     renderer.updateTile(i, lineCount, pngName); // when adding more folders to images/ will have to update
                 }
                 lineCount++;
@@ -94,9 +105,5 @@ public class ConfigManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private String getPngName(JSONObject refs, String key) {
-        return refs.getString(key);
     }
 }

@@ -2,6 +2,9 @@ package platformer.Framework;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+
+import java.util.HashMap;
 
 import platformer.Game;
 import platformer.Wrappers.TouchingData;
@@ -12,11 +15,14 @@ public class PhysicsManager {
     private FrameworkManager FWMan;
     
     private List<PhysicsObject> physicsObjects = new ArrayList<>();
+    
+    // phyics values
     private float gravity;
     private float frictionCoeff;
+    private float terminalVel;
 
     private final int LENIENCY = 5; // pixels into player that is still considered above or below
-    private final int SQUISH = 5; // pixels player can walk into block on sides before stopping
+    // private final int SQUISH = 5; // pixels player can walk into block on sides before stopping
 
     public PhysicsManager() {
         // load framwork manager
@@ -28,6 +34,7 @@ public class PhysicsManager {
     }
 
     public void update(float deltaTime) {
+        Game game = FWMan.getGame();
         Renderer renderer = FWMan.getRenderer();
 
         for (PhysicsObject obj : physicsObjects) {
@@ -35,7 +42,8 @@ public class PhysicsManager {
             // retrieving main variables
             PVector pos = obj.getPos();
             PVector vel = obj.getVel();
-            String imageRef = obj.getImageRef();            
+            String imageRef = obj.getImageRef();
+            HashMap<String, Boolean> activeForces = obj.getActiveForces(); // collision, gravity, friction 
 
             // get tiles being touched
             TouchingData touching = renderer.typesTouching((int) pos.x, (int) pos.y, imageRef);
@@ -44,7 +52,7 @@ public class PhysicsManager {
             PVector dimensions = touching.getDimensions();
 
             boolean touched[] = new boolean[4]; // up, down, left, right respectively
-            int tileSize = renderer.getTileSize();
+            int tileSize = game.getTileSize();
             for (int i = 0; i < touchingType.size(); i++) {
                 if (touchingType.get(i).equals("ground")) {
 
@@ -98,8 +106,8 @@ public class PhysicsManager {
             
 
             // apply forces
-            if (vel.y < 200) vel.y += gravity;
-            vel.x *= frictionCoeff; // apply friction (same in air and on ground for now)
+            if (vel.y < terminalVel && activeForces.containsKey("gravity") && activeForces.get("gravity")) vel.y += gravity;
+            if (activeForces.containsKey("gravity") && activeForces.get("friction")) vel.x *= frictionCoeff; // apply friction (same in air and on ground for now)
 
             // stop movement in certain directions
             if (touched[0] && vel.y < 0) vel.y = 0;
@@ -119,9 +127,15 @@ public class PhysicsManager {
         }
     }
 
+    // returns sides to be considered touched by tiles / physical objects for passed in object
+    // private boolean[] getTouched(PVector pos, Renderer renderer) {
+
+    // }
+
     // setters and getters
-    public void setPhysics(float gravity, float frictionCoeff) { // maybe use list as param laters
-        this.gravity = gravity;
-        this.frictionCoeff = frictionCoeff;
+    public void setPhysics(HashMap<String, Float> physicsValues) {
+        this.gravity = physicsValues.get("gravity");
+        this.frictionCoeff = physicsValues.get("friction-coeff");
+        this.terminalVel = physicsValues.get("terminal-vel");
     }
 }

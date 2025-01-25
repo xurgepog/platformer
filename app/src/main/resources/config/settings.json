@@ -1,3 +1,17 @@
 {
-    
+    "visual": {
+        "resolution": "2560x1440",
+        "window-type": "window"
+    },
+    "audio": {
+        "master": 50,
+        "music": 50,
+        "sfx": 50
+    },
+    "controls": {
+        "move-left": "a",
+        "move-right": "d",
+        "jump": "w",
+        "dash": "m"
+    }
 }

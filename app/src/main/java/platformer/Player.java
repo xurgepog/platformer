@@ -1,7 +1,10 @@
 package platformer;
 
+import platformer.Framework.InputManager;
 import platformer.Framework.PhysicsObject;
 import processing.core.PVector;
+
+import java.util.HashMap;
 
 public class Player implements PhysicsObject {
 
@@ -16,22 +19,33 @@ public class Player implements PhysicsObject {
 
     // other
     private boolean[] touched;
+    private HashMap<String, Boolean> activeForces;
+
     private boolean jumped;
 
-    private boolean dashing;
     private boolean dashed;
+    private boolean dashing;
     private float dashTimer;
+
+    // temp / testing
+    private boolean[] wasd;
 
     public Player(float x, float y) {
         pos = new PVector(x, y);
         vel = new PVector(0, 0);
 
         touched = new boolean[4]; // up, down, left, right respectively
+        activeForces = new HashMap<>();
+
+
         jumped = false;
 
         dashing = false;
         dashTimer = DASH_TIME;
         dashed = false;
+
+        // temp / testing
+        wasd = new boolean[4];
     }
 
     public void update(float deltaTime) {
@@ -40,9 +54,20 @@ public class Player implements PhysicsObject {
 
         if (dashing) {
             dashTimer -= deltaTime;
-            if (dashTimer >= 0) {
-                //
+            if (dashTimer <= 0) {
+                dashing = false;
             }
+            else {
+                int dashPower = 200;
+                if (wasd[0] && vel.y > -dashPower) vel.y = -dashPower;
+                if (wasd[1] && vel.x > -dashPower) vel.x = -dashPower;
+                if (wasd[2] && vel.y < dashPower) vel.y = dashPower;
+                if (wasd[3] && vel.x < dashPower) vel.x = dashPower;
+            }
+        }
+        else {
+            activeForces.put("gravity", true);
+            activeForces.put("friction", true);
         }
     }
 
@@ -63,13 +88,15 @@ public class Player implements PhysicsObject {
         }
     }
     public void dash(boolean[] wasd) {
-        int dashPower = 200;
-        if (!dashed) {
-            if (wasd[0] && vel.y > -dashPower) vel.y = -dashPower;
-            if (wasd[1] && vel.x > -dashPower) vel.x = -dashPower;
-            if (wasd[2] && vel.y < dashPower) vel.y = dashPower;
-            if (wasd[3] && vel.x < dashPower) vel.x = dashPower;
+        if (!dashed && !dashing) {
+            activeForces.put("gravity", false);
+            activeForces.put("friction", false);
+            vel.x = 0;
+            vel.y = 0;
+            this.wasd = wasd;
             dashed = true;
+            dashing = true;
+            dashTimer = DASH_TIME;
         }
     }
 
@@ -100,6 +127,13 @@ public class Player implements PhysicsObject {
     }
     public boolean[] getTouched() {
         return touched;
+    }
+
+    public void setActiveForces(HashMap<String, Boolean> activeForces) {
+        this.activeForces = activeForces;
+    }
+    public HashMap<String, Boolean> getActiveForces() {
+        return activeForces;
     }
 
     // imageRef

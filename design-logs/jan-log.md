@@ -162,7 +162,7 @@
   - Will use private variables with protected getters.
   - Added getters for each of the managers.
 
-# [12-01-2025] Day 20: Completing Basic Framework Manager
+# [12-01-2025] Day 20: Making Framework Manager Functional
 - **Framework Manager Progress**:
   - Hold *Game* instance in the *Framework Manager*, and pass it to the required functions directly using a getter.
   - Created a *createFrameworkManager* function that sets up the *Game* instance, and removes need for *Game* to call the getter.
@@ -172,8 +172,172 @@
   - Now *Game* is only accessible through this manager and the *Game* file itself!
   - Changed manager getters to public so that they are accessible to *Game*.
   - Made it so managers are initialised after instance is.
+  - Created temp interdepencies functions for testing purposes. Will clean up how the managers connect to one another later.
+  - Works!
 
 - **Other Ideas**:
   - Maybe split *PhysicsManagers* update function up for clearer code? Right now a lot of code all in one function.
   - Look at other files and see if any other functions suffer from this same fault.
   - Need to look into what makes a useful exception. Ones implemented today might not be useful, and want to know for future exception usage.
+  - Fix up interdependencies code.
+  - Will make it so that all functions called are written below the one calling it.
+
+- **To Do**:
+  - Look at all previous ideas from previous days an bunch them here.
+  - Add an update function to *physicsObjects* that do allow for unique behaviours each frame besides falling.
+  - Complete players update function.
+  - Polish players dash.
+  - Make camera follow player. If not near edge of tiles.
+
+# [14-01-2025] Day 21: Planning
+- **Settings ideas**:
+  - Maybe move default values into *settings.json*, then layout the settings as user and dev accessible.
+  - Split up user settings into categories like *audio*, *visual*, etc.
+  - Figure out how to split dev settings up when more are added. Thinking what manager requires what values, or what they relate to, e.g. physics.
+  - Need to consider what else to add to settings. Look up when internet is available, what should be in the main config.
+  - Since everything could be considered a setting. Maybe leave dev / default values in config?
+  - Figure out later.
+
+- **Documentation**:
+  - Filled out basics.md file in mechanics / movement folder with headings of future things to add.
+  - Added more than needed, just put all ideas, so organise later.
+  - Will make it so the folder does not just contain mechanics, but rather includes all finalised decisions, breaking down what each framework does etc.
+
+- **Mechanics ideas**:
+  - Add different friction based on tile being touched.
+  - Can make it so friction is applied based on direction of block. This will allow sliding down walls.
+  - When implementing camera movement, make it lag a bit behind the player. Looks smoother.
+  - Based on distance from player speed up.
+  - Will have to move all the tiles since no actual camera movement in *Processing* I believe.
+  - Will check before I begin implementing however.
+  - If everything has to move relative to camera, just calculate where camera is compared to player and where to player is, then subtract it off everything.
+
+- **Framework Manager**:
+  - Consider adding a *loadDefaults* function in *ConfigManager* to replace temporary one.
+  - Maybe add some kind of interface for managers.
+
+- Look into enums and other class types, just as a reminder for what they do.
+- May need them later.
+
+# [21-01-2025] Day 22:
+- **Personal Notes**:
+  - Had a bit of a break due to being pretty sick.
+  - Still am sick which is pretty annoying, but need to lock in.
+  - Goal is to finish the framework of the game before the end of Febuary.
+  - This is along side creating a resume and polishing school projects, so there is lots to do.
+
+- **Player Movement**: Dashing
+  - Today I just want to finish the players dash.
+  - The idea is to make it apply a set velocity for a certain amount of time.
+  - If player collides with wall, stop collision early.
+  - Need a way to disable forces while dashing. Would help for other physics objects that want to float.
+  - Perhaps force a forces array onto *phyicsObjects* that holds all the forces that are to be applied to that specific object.
+  - Potentially allow collision to be ignored as well.
+  - Right now just implementing it as a boolean array, will implement a format that is clearer later.
+  - Dash works. Diagonals are way too strong. Also since turning of forces when jumping, player will levitate while dashing.
+  - Need to make it that players movement is set to 0 before dash. 
+  - Could ruin momentum, but works for now.
+
+- **Next Steps**:
+  - Start animating character movement.
+  - Look at last two days for framework improvements that need to be implemented.
+
+# [22-01-2025] Day 23: Previous Tasks
+- **Gathering previous jobs to do**: Will tick off as completed.
+  - Animate character.
+  - Split up functions in framework.
+  - Remove useless exceptions.
+  - Fix interdependencies code.
+  - Order functions so they are in order of being called.
+  - Make camera follow player.
+  - Polish player update function and dash.
+  - Make it so only certain tile types are flagged as physical.
+  - Make boolean arrays clearer as to what each index is holding.  *X*
+  - Add menu and level loader.
+  - Remove constants.
+  - Organise config files.
+
+- **Make Boolean Arrays Clear**:
+  - Renamed *forces* to *activeForces*.
+  - Instead of a boolean array, try a hashmap with keys being strings with force type and value being boolean.
+  - Will leave *touched* as a boolean arary.
+
+
+# [23-01-2025] Day 24: Previous Tasks
+- **Organise Config Files**:
+  - Need to decide what is going to be stored in each of the config files.
+  - Will try and create a basic layout in each, even if data is not going to be used yet.
+  - In *levels.json* adding a *tiles* jsonObject. Inside will hold *image-refs* (originally called references) and *attributes*.
+  - *attributes* will hold jsonArrays, and for now just incudes *solid* (object stops player movement), and *damage* (kills player on touch). 
+
+- **Fix Interdependencies Code**:
+  - Interdependencies extend outside the framework. Player requires setup as well.
+  - Seems that all interdependencies come from the need to access config details.
+
+- Issue found when holding 'w' and falling off left edge. Try and identify cause then fix.
+
+# [25-01-2025] Day 25: Planning
+- **Planning Mechanics**:
+  - Want to make the levels look like labs.
+  - Add dash reset crystals, bounce pads, velocity flippers, blocks that extend dash, ground that speeds up, water that can be swam in, spikes.
+  - Maybe add entity array into renderer and make physics objects have a size attribute. This means moveable boxes and other moving entities can exist.
+  - Constantly check if physicsObjects are touching, if so stop their movement.
+  - Add a *phyicsObject* attribute in *levels.json*. Will add a box object when ready to test this idea.
+  - This means that physicsObjects will have to have their own class. Maybe also create classes for tiles.
+
+- **Staying Motivated**:
+  - Holy I have a lot left to do lol.
+  - I think to stay motivated with this much work I need to set clear goals. Luckily I have to previous tasks set out well.
+  - Will create a TODO file and put everything there for clarity.
+  - Just need to pick what to do each day and commit to it.
+  - Today I will no matter what complete organising the config files.
+
+- **Organising Config Files**:
+  - **config.json**:
+    - Will simplify by forcing all config files to be in the same folder.
+    - Now config folder is given in *ConfigManager*.
+    - Removed *paths* and everything within.
+    - Now config file names are given in *config-files* jsonObject.
+    - Other required paths are given in *other-paths* jsonObject.
+    - Added *level-layouts-dir* to *other-paths* along with pre-existing *images-dir*.
+    - Readded *paths* and reverted *ConfigManager* changes.
+    - Added *resources* directory and *config* directory to *directories* object.
+    - Removed *-dir* from end of directories.
+    - Changed *default-values* to physics.
+    - Added *debug* jsonObject along with *show-hitboxes* and *enable-logs* booleans.
+    - Removed *resources* directory. Will use full paths.
+  - **settings.json**:
+    - Removed *dev* and *user* sections along with all *dev* values. These will only be present in config.json for now on.
+    - Added a *controls* section that has all the buttons that are currently being used (wasd and m).
+  - **levels.json**:
+    - Added *id* for easy referencing to levels.
+    - Moved *levelsLocations* to *config.json*.
+  - **save.json**:
+    - Added: *current-level*, *completed-levels* jsonArray, *stats* jsonObject which holds: *total-playtime*, *deaths*, *kills*.
+    - Added *current-checkpoint* jsonArray which saves the x and y position of the last touched checkpoint.
+
+  - This should be enough for now. Kind of gives me a roadmap to work on as well.
+  - Will have to fix configManager now. Will do so while working on interdependencies setup.
+
+- **Framework Fixing**: making code run after json changes.
+  - Start by fixing *ConfigManager* after change config json files.
+  - Will remove *getConfig* function.
+  - Added files and directories to global variables (or whatever class accessible function are called).
+  - Maybe make two level files, one has all the tiles that won't need to ever be reset on death or level reload. The other has anything that can be destroyed.
+  - This can be implemented later.
+  - Made physicsValue to be sent to *physicsManager* a hashMap rather than each being sent individually.
+  - Moved *TILE_SIZE* to *Game*. Will add a getter for other managers to use.
+  - Added *scaleFactor* getter to *Game*.
+  - Removed whole *attributes* thing introduced yesterday. Now that planning to implement tile objects will define there. ----- undo this I think?
+  - Works now.
+  - Want to remove exceptions in *FrameworkManager*. I want to use exceptions in placed possible for player to access.
+
+**Polishing Framework**:
+  - Removed *getPngName* function from *ConfigManager*.
+
+**Implementing Advanced Tiles**:
+  - Want to make it so tiles are objects.
+  - I also want renderer to hold a list of tiles that can move outside of fixed grid.
+  - Will want to introduce a tile interface.
+  - This will hold the size of the tile along with its attributes.
+  - 

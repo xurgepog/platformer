@@ -1,19 +1,23 @@
-{
+{   
     "paths": {
-        "directories": {
-            "settings": "src/main/resources/config/",
-            "save": "src/main/resources/config/",
-            "levels": "src/main/resources/config/",
-            "images": "/assets/images/"
-        },
         "files": {
             "settings": "settings.json",
             "save": "save.json",
             "levels": "levels.json"
+        },
+        "directories": {
+            "config": "src/main/resources/config/",
+            "images": "/assets/images/",
+            "level-layouts": "src/main/resources/levels/"
         }
     },
-    "default-values": {
+    "physics": {
         "gravity": 4.4,
-        "friction-coeff": 0.8
+        "friction-coeff": 0.8,
+        "terminal-vel": 200
+    },
+    "debug": {
+        "show-hitboxes": true,
+        "enable-logs": true
     }
 }

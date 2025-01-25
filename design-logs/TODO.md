@@ -1,0 +1,22 @@
+- Animate character.
+- Split up functions in framework.
+- Remove useless exceptions.
+- Fix interdependencies code.
+- Order functions so they are in order of being called.
+- Make camera follow player.
+- Polish player update function and dash.
+- Make it so only certain tile types are flagged as physical.
+- Add menu and level loader.
+- Remove constants.
+- Organise config files.
+- Add dash reset crystals, bounce pads, velocity flippers, blocks that extend dash, ground that speeds up, water that can be swam in, spikes.
+- This means that physicsObjects will have to have their own class. Maybe also create classes for tiles.
+- Add box and spike
+- Add saves
+- Add deaths
+- Add loading screen
+- Create debug mode
+- Create test cases
+- Learn OOP things like factories?? smth patterns
+- Look at json files and make everything useful
+- Consider two level files, one for resetting things that can be move or be destroyed. This is so entire level does not have to be reset on death.

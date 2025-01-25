@@ -1,13 +1,15 @@
 {
-    "levelsLocation": "src/main/resources/levels/",
     "levels": [
         {
-            "layout": "level1.txt",
-            "levelWidth": 40,
-            "levelHeight": 22
+            "id": 1,
+            "name": "level1",
+            "difficulty": 1,
+            "layout": "level1.txt"
         }
     ],
-    "references": {
-        "X": "ground"
+    "image-refs": {
+        "X": "ground",
+        "S": "spike",
+        "B": "box"
     }
 }

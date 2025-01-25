@@ -5,11 +5,10 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 
 import platformer.Game;
 import platformer.Wrappers.TouchingData;
-
-import java.util.ArrayList;
 
 import processing.core.PImage;
 import processing.core.PVector;
@@ -17,9 +16,6 @@ import processing.core.PVector;
 public class Renderer {
 
     private FrameworkManager FWMan;
-
-    // constants
-    private final int TILE_SIZE = 16;
     
     // lists
     private HashMap<String, PImage> images;
@@ -27,17 +23,20 @@ public class Renderer {
     // private List<String> entities;
 
     // others
+    private int tileSize;
     private int scaleFactor;
     private String imageLoc;
 
-    public Renderer(int scaleFactor) {
+    public Renderer() {
         // load framwork manager
         FWMan = FrameworkManager.getFrameworkManager();
+        Game game = FWMan.getGame();
         
         images = new HashMap<>();
         levelTiles = new ArrayList<>();
 
-        this.scaleFactor = scaleFactor;
+        this.tileSize = game.getTileSize();
+        this.scaleFactor = game.getScaleFactor();
     }
 
     private PImage getImage(String imageRef) { // need to think about unloading images to save memory, as well as preloading common assests
@@ -87,7 +86,7 @@ public class Renderer {
         for (int y = 0; y < levelTiles.size(); y++) {
             for (int x = 0; x < levelTiles.get(y).size(); x++) {
                 if (levelTiles.get(y).get(x) == null) continue;
-                drawImage(levelTiles.get(y).get(x), x * TILE_SIZE, y * TILE_SIZE);
+                drawImage(levelTiles.get(y).get(x), x * tileSize, y * tileSize);
             }
         }
     }
@@ -102,14 +101,14 @@ public class Renderer {
         TouchingData touching = new TouchingData(touchingTypes, touchingPos, dimensions);
 
         // checking entire 'hitbox' or image (i.e. everything the image touches, assuming image is rectangle)
-        for (int y2 = y / TILE_SIZE; y2 <= (y + image.height) / TILE_SIZE; y2++) { // <= ??? only for y
-            for (int x2 = x / TILE_SIZE; x2 <= (x + image.width) / TILE_SIZE; x2++) {
+        for (int y2 = y / tileSize; y2 <= (y + image.height) / tileSize; y2++) { // <= ??? only for y
+            for (int x2 = x / tileSize; x2 <= (x + image.width) / tileSize; x2++) {
                 if ((y2 >= 0 && y2 < levelTiles.size()) && (x2 >= 0 && x2 < levelTiles.get(y2).size())) {
                     String type = levelTiles.get(y2).get(x2);
                     // System.out.println(type);
                     if (type != null) {
                         touchingTypes.add(type);
-                        touchingPos.add(new PVector(x2 * TILE_SIZE, y2 * TILE_SIZE));
+                        touchingPos.add(new PVector(x2 * tileSize, y2 * tileSize));
                     }
                 }
             }
@@ -124,9 +123,5 @@ public class Renderer {
 
     public void setImageLoc(String imageLoc) {
         this.imageLoc = imageLoc;
-    }
-
-    public int getTileSize() {
-        return TILE_SIZE;
     }
 }

@@ -23,10 +23,11 @@ public class Game extends PApplet {
 
     // constants
     private final int DEFAULT_FRAMERATE = 60;
-
-    // screen related variables
     private final int BASE_WIDTH = 640;
     private final int BASE_HEIGHT = 360;
+    private final int TILE_SIZE = 16;
+
+    // screen related variables
     private int scaleFactor;
     // private int gameWidth, gameHeight; // size of game without borders
     // private int horiBorder, vertBorder;
@@ -58,7 +59,7 @@ public class Game extends PApplet {
         horiBorder = (screenWidth - gameWidth) / 2;
         vertBorder = (screenHeight - gameHeight) / 2;   
         */     
-        scaleFactor = 2; // 3 for now, implement non magic number solution later
+        scaleFactor = 2; // 2 for now, implement non magic number solution later
         size(BASE_WIDTH * scaleFactor, BASE_HEIGHT * scaleFactor, JAVA2D); // set the size of the window
     }
 
@@ -84,7 +85,7 @@ public class Game extends PApplet {
         // objectRGB = new int[]{137, 176, 174}; // 'BEE3DB'
 
         
-        configManager.loadLevel(renderer, 0);
+        configManager.loadLevel(0);
         // surface.setSize(1200, 600);
 
         // centering window - done last to give surface more time to setup, could look into another fix later
@@ -111,8 +112,6 @@ public class Game extends PApplet {
         float deltaTime = 1.0f / frameRate;
         physicsManager.update(deltaTime);
 
-        // player.draw(this); // add a renderer later?
-
         renderer.drawLevel();
 
         // handle below within inputHandler? - handle in level class later? - when created, for now this is fine
@@ -131,6 +130,16 @@ public class Game extends PApplet {
             player.jump();
         }
     }
+
+    // setters and getters
+    public int getTileSize() {
+        return TILE_SIZE;
+    }
+
+    public int getScaleFactor() {
+        return scaleFactor;
+    }
+
     public static void main(String[] args) {
         PApplet.main("platformer.Game");
     }

@@ -1,3 +1,10 @@
 {
-    
+    "current-level": 1,
+    "current-checkpoint": [100, 100],
+    "completed-levels": [1],
+    "stats": {
+        "total-playtime": 0,
+        "deaths": 0,
+        "kills": 0
+    }
 }
