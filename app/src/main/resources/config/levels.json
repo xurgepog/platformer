@@ -7,9 +7,16 @@
             "layout": "level1.txt"
         }
     ],
-    "image-refs": {
-        "X": "ground",
-        "S": "spike",
-        "B": "box"
+    "tiles": {
+        "image-refs": {
+            "X": "ground",
+            "S": "spike",
+            "B": "box"
+        },
+        "attributes": {
+            "ground": ["solid"],
+            "spike": ["damage"],
+            "box": ["solid", "physicsObject"]
+        }
     }
 }

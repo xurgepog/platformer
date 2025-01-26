@@ -27,7 +27,9 @@ public class ConfigManager {
     private JSONObject levelData;
     private String levelLayoutsDir;
     private JSONArray levels;
+    private JSONObject tiles;
     private JSONObject imageRefs;
+    private JSONObject attributes;
 
     public ConfigManager() {
         // load framwork manager
@@ -51,7 +53,9 @@ public class ConfigManager {
         // levels loading
         levelLayoutsDir = directories.getString("level-layouts");
         levels = levelData.getJSONArray("levels");
-        imageRefs = levelData.getJSONObject("image-refs");
+        tiles = levelData.getJSONObject("tiles");
+        imageRefs = tiles.getJSONObject("image-refs");
+        attributes = tiles.getJSONObject("attributes");
     }
 
     public void setupInterdependencies() {        

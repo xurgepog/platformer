@@ -1,6 +1,5 @@
 package platformer;
 
-import platformer.Framework.InputManager;
 import platformer.Framework.PhysicsObject;
 import processing.core.PVector;
 
