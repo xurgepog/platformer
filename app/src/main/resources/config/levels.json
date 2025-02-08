@@ -9,6 +9,7 @@
     ],
     "tiles": {
         "image-refs": {
+            "O": "spawn",
             "X": "ground",
             "S": "spike",
             "B": "box"

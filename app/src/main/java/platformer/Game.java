@@ -8,7 +8,7 @@ import java.awt.Toolkit;
 import platformer.Framework.ConfigManager;
 import platformer.Framework.FrameworkManager;
 import platformer.Framework.InputManager;
-import platformer.Framework.PhysicsManager;
+import platformer.Framework.PlayerController;
 import platformer.Framework.Renderer;
 
 public class Game extends PApplet {
@@ -17,7 +17,7 @@ public class Game extends PApplet {
     private FrameworkManager FWMan;
 
     private ConfigManager configManager;
-    private PhysicsManager physicsManager;
+    private PlayerController playerController;
     private Renderer renderer;
     private InputManager inputManager;
 
@@ -73,13 +73,9 @@ public class Game extends PApplet {
         FWMan = FrameworkManager.createFrameworkManager(this);
 
         configManager = FWMan.getConfigManager();
-        physicsManager = FWMan.getPhysicsManager();
+        playerController = FWMan.getplayerController();
         renderer = FWMan.getRenderer();
-        inputManager = FWMan.getInputManager();
-
-        player = new Player(100, 100);
-        physicsManager.addObject(player);
-        
+        inputManager = FWMan.getInputManager();        
         
         backRGB = new int[]{190, 227, 219}; // '89B0AE'
         // objectRGB = new int[]{137, 176, 174}; // 'BEE3DB'
@@ -110,7 +106,7 @@ public class Game extends PApplet {
         background(backRGB[0], backRGB[1], backRGB[2]); // replace with image later
 
         float deltaTime = 1.0f / frameRate;
-        physicsManager.update(deltaTime);
+        playerController.update(deltaTime);
 
         renderer.drawLevel();
 

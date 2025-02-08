@@ -263,7 +263,7 @@
   - Will leave *touched* as a boolean arary.
 
 
-# [23-01-2025] Day 24: Previous Tasks
+# [23-01-2025] Day 24: Small Progess to Previous
 - **Organise Config Files**:
   - Need to decide what is going to be stored in each of the config files.
   - Will try and create a basic layout in each, even if data is not going to be used yet.
@@ -276,7 +276,7 @@
 
 - Issue found when holding 'w' and falling off left edge. Try and identify cause then fix.
 
-# [25-01-2025] Day 25: Planning
+# [25-01-2025] Day 25: Planning and Config Layout Complete
 - **Planning Mechanics**:
   - Want to make the levels look like labs.
   - Add dash reset crystals, bounce pads, velocity flippers, blocks that extend dash, ground that speeds up, water that can be swam in, spikes.
@@ -328,16 +328,69 @@
   - Made physicsValue to be sent to *physicsManager* a hashMap rather than each being sent individually.
   - Moved *TILE_SIZE* to *Game*. Will add a getter for other managers to use.
   - Added *scaleFactor* getter to *Game*.
-  - Removed whole *attributes* thing introduced yesterday. Now that planning to implement tile objects will define there. ----- undo this I think?
   - Works now.
   - Want to remove exceptions in *FrameworkManager*. I want to use exceptions in placed possible for player to access.
 
 **Polishing Framework**:
   - Removed *getPngName* function from *ConfigManager*.
 
-**Implementing Advanced Tiles**:
+**Considering Advanced Tiles**:
   - Want to make it so tiles are objects.
   - I also want renderer to hold a list of tiles that can move outside of fixed grid.
   - Will want to introduce a tile interface.
   - This will hold the size of the tile along with its attributes.
-  - 
+  - Need to consider how I going to differentiate between the tiles. By class, by an attribute?
+
+- Probabaly should stop listing every single change. Just write what I am aiming to achieve over all.
+
+# [26-01-2025] Day 26: The Decision
+- **Considering Advanced Tiles**:
+  - Need to consider how I want to implement water and pushable boxes.
+  - From here the rest should become clear.
+  - Do I want the game to revolve around the player, or allow other entities to interact with one another.
+  - I think I want them to interact. Consider how the player is coded currently. Want to treat the player as a tile in a way.
+  - Think about how the player is stopped currently. It is done in *PhysicsManager*. How will it change if logic is stored in the tiles themselves.
+  - Will be mostly the same, but the interaction logic between the player and the ground will be handled in the ground tile class.
+  - I will create a *box* class as a *physicsObject* and see what currently happens.
+  - First thing I notice when trying to do this, is that magic numbers are used for player spawn currently. Will make spawns handled in a single spot.
+  - Seems that I should handle spawning and adding objects to *PhysicsManager* through *Renderer*.
+  - A possible future issue. If every moveable object is constantly considering where the other moveable objects are it will be pretty slow.
+  - Maybe check using nearby things in the grid.
+
+**The Decision**: Spoiler, no more advanced tiles.
+  - I think the advanced tile idea should not be done.
+  - I feel that I should change the systems I have to have to player be the only *physicsObject* as well.
+  - The reason for this decision is that my future game idea that is very physics heavy will allow me to explore treating all objects as physics objects idea.
+  - So to avoid doing the same thing twice, and improve the scenarios I've encountered as a progammer, will do a player is the only physics object framework.
+
+**Player Focused Framework Implementation**:
+  - Player will be only thing that is impacted by forces. This means it is the only *physicsObject*.
+  - This does mean a lot of what I have introduced has been useless, but we persevere nonetheless.
+  - Will make *PhysicsManager* more of the place where the logic behind player interactions with different types of tiles is completed.
+  - This means the player can be created within *PhysicsManager* and there is no more point to *PhysicsObject*.
+  - Will commit now before these changes however in case I choose to revert.
+  - Time to change it to work!
+  - Need to consider how to choose where player will spawn, and how levels are loaded.
+  - When load level is called in *ConfigManager* it is what is drawing everything onto the screen.
+  - Somehow when this is done it needs to read the config and create the player then.
+  - Might change *PhysicsManager* to *PlayerInteractions*?
+  - Need to consider where player related movement will be handled. In *PhysicsHandler*, in *Player*?
+  - Will need to resize spawn png to be square and probably try and make it 16 x 16.
+
+# [27-01-2025] Day 27: Player Focused Framework Continued
+- **Player Focused Framework Continued**:
+  - What will be handled in *Player* and what will be handled in *PhysicsManager*.
+  - *Player* will hold what it does now, which is all the movement mechanics. *PhysicsManager* will handle all interactions.
+  - This includes key presses.
+  - Renamed *PhysicsManager* to *PlayerController*.
+
+- **Some thoughts**: not important to progress
+  - I'm now having doubts about this new system.
+  - Maybe look into design patterns or whatever it is called and go hard on them.
+  - So when asked in an interview the point of this side project I can say to utilise git in a similar fashion to a workplace environment, and design patterns.
+  - Also wanted to work on a project myself.
+  - This means, I will touch of my inkball to use interfaces and those systems more.
+
+# [28-01-2025] Day 27: Might take a little break
+- Really am considering going back and implementing the tile system.
+- Want to just have some time off to think about it.

@@ -9,7 +9,7 @@ public class FrameworkManager {
     private Game game;
 
     private ConfigManager configManager;
-    private PhysicsManager physicsManager;
+    private PlayerController playerController;
     private Renderer renderer;
     private InputManager inputManager;
 
@@ -29,7 +29,7 @@ public class FrameworkManager {
     private void setupManagers() {
         // create framework instances
         configManager = new ConfigManager();
-        physicsManager = new PhysicsManager();
+        playerController = new PlayerController();
         renderer = new Renderer();
         inputManager = new InputManager();
         
@@ -49,8 +49,8 @@ public class FrameworkManager {
     public ConfigManager getConfigManager() {
         return configManager;
     }
-    public PhysicsManager getPhysicsManager() {
-        return physicsManager;
+    public PlayerController getplayerController() {
+        return playerController;
     }
     public Renderer getRenderer() {
         return renderer;

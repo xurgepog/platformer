@@ -60,17 +60,17 @@ public class ConfigManager {
 
     public void setupInterdependencies() {        
         // physics manager
-        PhysicsManager physicsManager = FWMan.getPhysicsManager();
+        PlayerController playerController = FWMan.getplayerController();
         
         JSONObject physics = configData.getJSONObject("physics");
         HashMap<String, Float> physicsValues = new HashMap<>();
 
-            // grab values from physics object in config.json and send them to physicsManager
+            // grab values from physics object in config.json and send them to playerController
         physicsValues.put("gravity", physics.getFloat("gravity"));
         physicsValues.put("friction-coeff", physics.getFloat("friction-coeff"));
         physicsValues.put("terminal-vel", physics.getFloat("terminal-vel"));
 
-        physicsManager.setPhysics(physicsValues);
+        playerController.setPhysics(physicsValues);
 
         // renderer
         Renderer renderer = FWMan.getRenderer();
@@ -80,7 +80,8 @@ public class ConfigManager {
 
     // draws the level onto the screen by reading the appropriate text file
     public void loadLevel(int levelNum) {      
-        Renderer renderer = FWMan.getRenderer();  
+        Renderer renderer = FWMan.getRenderer();
+        PlayerController playerController = FWMan.getplayerController();
         
         JSONObject level = levels.getJSONObject(levelNum);        
         String levelLayout = level.getString("layout");
@@ -102,6 +103,10 @@ public class ConfigManager {
                         i++;
                     }
                     String pngName = imageRefs.getString(key); // get the png name of the key
+                    if (pngName == "spawn") {
+                        playerController.createPlayer(i, lineCount);
+                        continue;
+                    }
                     renderer.updateTile(i, lineCount, pngName); // when adding more folders to images/ will have to update
                 }
                 lineCount++;
