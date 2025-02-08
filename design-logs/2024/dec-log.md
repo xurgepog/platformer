@@ -1,5 +1,4 @@
 # [08-12-2024] Day 1: Initial Setup
-
 - **Project Setup**: Initialized a new Java project using Gradle.
     - Used the Gradle initialization wizard to create a basic structure.
     - Chose Gradle as the build tool for easy dependency management and flexibility.
@@ -15,7 +14,6 @@
     - Set up Processing framework
 
 # [09-12-2024] Day 2: Further Planning and Setup
-
 - **Game Concept**: Brainstorming Ideas.
     - Considering creating a rage game, focusing on a core mechanic that's simple to grasp but challenging to master.
     - The key question: How can I design a platformer where skill is crucial for success?
@@ -40,7 +38,6 @@
     - Issue: Currently can't move window or hit X sometimes.
 
 # [10-12-2024] Day 3: Brainstorming mechanics
-
 - **Project Setup**: 
     - Explored the Steamworks SDK, but it's not necessary for now. 
     - Played around with obtaining the user's screen size and scaling the window accordingly. 
@@ -63,7 +60,6 @@
     - Include different difficulty levels: Easy (allows a slower completion time), Medium (beat it once), and Hard (requires revisiting levels to improve your average time).
 
 # [11-12-2024] Day 4: Honing Idea
-
 - **Project Setup**:
     - Began considering possibility of how to keep the main App.java file clean, didn't make much progress.
 
@@ -77,7 +73,6 @@
     - Perhps try thinking of ways to limit player. For example, can't stop running. Similar to idea of having to beat certain time.
 
 # [13-12-2024] Day 5: Finalising Idea
-
 - **Game Concept**:
     - Taking too long to get a polished idea for a side project, certainly over thinking it.
     - From research: *"As long as you don't use graphics, characters, story, music, sound effects, etc. from other games, you can even sell it. Game mechanics can't be copyrighted."*
@@ -100,7 +95,6 @@
     - Began planning the basic movement mechanics. That is left and right movement, jumping, gravity.
 
 # [16-12-2024] Day 6: Creating Framework
-
 - **Framework Creation**:
     - Will begin to create the main framework whilst implementing the left and right movement.
     - Developed a *Player* class to handle the player's attributes and behavior.
@@ -118,7 +112,6 @@
     - If a screen is not a multiple, add a border maybe so maintain a clear visual.
 
 # [17-12-2024] Day 7: Refining Framework
-
 - **Scaling**: Temporary Decisions
     - When fullscreen the game runs really choppy.
     - Since it is just a side project, the main goal should just be to create a functioning game.
@@ -145,7 +138,6 @@
     - Will create a *configManager* class to handle both the levels and main config.
 
 # [18-12-2024] Day 8: Config and Renderer Planning
-
 - **ConfigManager**:
     - Began working on the *configManager*.
     - Set up basic *config.json* file that points to the other config files.
@@ -156,7 +148,6 @@
     - Need to consider about unloading images to save memory, as well as preloading common assests.
 
 # [19-12-2024] Day 9: Config and Renderer Basics Creation
-
 - **ConfigManager and Renderer**: Completed both in conjunction
     - Want to add a *loadImage()* function to *Renderer* that performs action of drawing the image to the screen.
     - Complete *loadLevel()* basic functionality. It is now able to read the text file specified in *levels.json*, printing it to stdout.
